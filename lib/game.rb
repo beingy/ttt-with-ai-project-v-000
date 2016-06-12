@@ -81,7 +81,7 @@ class Game
             puts "[0] 0 Player Game"
             puts "[1] 1 Player Game"
             puts "[2] 2 Player Game"
-            puts "[3] Wargame!"
+            puts "[3] Wargames"
             print "Command: "
             user_input = gets.chomp
 
@@ -206,12 +206,81 @@ class Game
                     # print "Play again? [Yes/No]: "
                     # again_input = gets.chomp
                     # user_input = "exit" if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
-                end
+                
+                end # => case user_input
 
-            when user_input == "3"
-                puts "=========="
-                puts "[You've selected to play Wargame!]"
+            when user_input == "3" || user_input == "wargames" || user_input == "Wargames"
+                "Wargames commencing...\n".each_char do |c|
+                          sleep 0.1
+                          print c
+                        end
+                puts "[Who should go first and be X? Player 1 AI or Player 2 AI?]"
+                print "[1] or [2]: "
+                user_input = gets.chomp
 
+                case user_input
+                when "1"
+                    player_1_wins = 0
+                    player_2_wins = 0
+                    100.times do
+                        player_1 = Player::Computer.new("X")
+                        player_2 = Player::Computer.new("O")
+                        game = Game.new(player_1,player_2)
+                        game.play
+                        if game.winner == "X"
+                            puts "Player 1 AI won!"
+                            player_1_wins += 1
+                        elsif game.winner == "O"
+                            puts "Player 2 AI won!"
+                            player_2_wins += 1
+                        end
+                    end
+                    puts "Out of 100 games played:"
+                    puts "Player 1 AI won #{player_1_wins} games."
+                    puts "Player 2 AI won #{player_2_wins} games."
+
+                    print "Play again? [Yes/No]: "
+                    again_input = gets.chomp
+                    if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
+                        "Good Bye, Human!\n".each_char do |c|
+                          sleep 0.1
+                          print c
+                        end
+                        user_input = "exit" 
+                    end
+
+                when "2"
+                    player_1_wins = 0
+                    player_2_wins = 0
+                    100.times do
+                        player_1 = Player::Computer.new("O")
+                        player_2 = Player::Computer.new("X")
+                        game = Game.new(player_2,player_1)
+                        game.display
+                        game.play
+                        if game.winner == "X"
+                            puts "Player 2 AI won!"
+                            player_2_wins += 1
+                        elsif game.winner == "O"
+                            puts "Player 1 AI won!"
+                            player_1_wins += 1
+                        end
+                    end
+
+                    puts "Out of 100 games played:"
+                    puts "Player 1 AI won #{player_1_wins} games."
+                    puts "Player 2 AI won #{player_2_wins} games."
+
+                    print "Play again? [Yes/No]: "
+                    again_input = gets.chomp
+                    if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
+                        "Good Bye, Human!\n".each_char do |c|
+                          sleep 0.1
+                          print c
+                        end
+                        user_input = "exit" 
+                    end
+                end # => case user_input
             
             when user_input == "bye" || user_input == "quit"
                 puts "=========="
@@ -221,7 +290,7 @@ class Game
                 end
                 user_input = "exit"
 
-            end
+            end # => case main
         end
 
     end
