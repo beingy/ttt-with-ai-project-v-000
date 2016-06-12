@@ -1,7 +1,8 @@
 require 'pry'
 
 class Board
-    attr_accessor :cells, :moves
+    attr_accessor :cells
+    # , :moves
 
     def initialize
         reset!
@@ -9,12 +10,12 @@ class Board
 
     def reset!
         @cells = [" "," "," "," "," "," "," "," "," "]
-        @moves = @cells
+        # @moves = @cells
     end
 
-    def reset_available_moves
-        available_moves.clear
-    end
+    # def reset_available_moves
+    #     available_moves.clear
+    # end
 
     def display
         puts " #{@cells[0]} | #{@cells[1]} | #{@cells[2]} "
@@ -41,8 +42,8 @@ class Board
     #     board_available_moves
     # end
 
-    def position(user_input)
-        @cells[user_input.to_i - 1]
+    def position(player_move)
+        @cells[player_move.to_i - 1]
     end
 
     def full?

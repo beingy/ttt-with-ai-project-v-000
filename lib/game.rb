@@ -102,6 +102,8 @@ class Game
                         puts "Player 1 AI won!"
                     elsif game.winner == "O"
                         puts "Player 2 AI won!"
+                    elsif game.draw?
+                        puts "Draw!"
                     end
                     print "Play again? [Yes/No]: "
                     again_input = gets.chomp
@@ -123,6 +125,8 @@ class Game
                         puts "Player 2 AI won!"
                     elsif game.winner == "O"
                         puts "Player 1 AI won!"
+                    elsif game.draw?
+                        puts "Draw!"
                     end
                     print "Play again? [Yes/No]: "
                     again_input = gets.chomp
@@ -152,6 +156,8 @@ class Game
                         puts "Player 1, You won!"
                     elsif game.winner == "O"
                         puts "Player 2 AI won!"
+                    elsif game.draw?
+                        puts "Draw!"
                     end
                     # print "Play again? [Yes/No]: "
                     # again_input = gets.chomp
@@ -189,6 +195,8 @@ class Game
                         puts "Player 1, You won!"
                     elsif game.winner == "O"
                         puts "Player 2, You won!"
+                    elsif game.draw?
+                        puts "Draw!"
                     end
                     # print "Play again? [Yes/No]: "
                     # again_input = gets.chomp
@@ -202,6 +210,8 @@ class Game
                         puts "Player 2, You won!"
                     elsif game.winner == "O"
                         puts "Player 1, You won!"
+                    elsif game.draw?
+                        puts "Draw!"
                     end
                     # print "Play again? [Yes/No]: "
                     # again_input = gets.chomp
@@ -222,6 +232,7 @@ class Game
                 when "1"
                     player_1_wins = 0
                     player_2_wins = 0
+                    draws = 0
                     100.times do
                         player_1 = Player::Computer.new("X")
                         player_2 = Player::Computer.new("O")
@@ -233,11 +244,15 @@ class Game
                         elsif game.winner == "O"
                             puts "Player 2 AI won!"
                             player_2_wins += 1
+                        elsif game.draw?
+                            puts "Draw!"
+                            draws += 1
                         end
                     end
                     puts "Out of 100 games played:"
-                    puts "Player 1 AI won #{player_1_wins} games."
-                    puts "Player 2 AI won #{player_2_wins} games."
+                    puts "Player 1 AI won #{player_1_wins} games,"
+                    puts "Player 2 AI won #{player_2_wins} games,"
+                    puts "and #{draws} draws."
 
                     print "Play again? [Yes/No]: "
                     again_input = gets.chomp
@@ -252,6 +267,7 @@ class Game
                 when "2"
                     player_1_wins = 0
                     player_2_wins = 0
+                    draws = 0
                     100.times do
                         player_1 = Player::Computer.new("O")
                         player_2 = Player::Computer.new("X")
@@ -264,12 +280,16 @@ class Game
                         elsif game.winner == "O"
                             puts "Player 1 AI won!"
                             player_1_wins += 1
+                        elsif game.draw?
+                            puts "Draw!"
+                            draws += 1
                         end
                     end
 
                     puts "Out of 100 games played:"
-                    puts "Player 1 AI won #{player_1_wins} games."
-                    puts "Player 2 AI won #{player_2_wins} games."
+                    puts "Player 1 AI won #{player_1_wins} games,"
+                    puts "Player 2 AI won #{player_2_wins} games,"
+                    puts "and #{draws} draws."
 
                     print "Play again? [Yes/No]: "
                     again_input = gets.chomp
