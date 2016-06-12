@@ -1,7 +1,7 @@
 require 'pry'
 
 class Board
-    attr_accessor :cells
+    attr_accessor :cells, :moves
 
     def initialize
         reset!
@@ -9,6 +9,11 @@ class Board
 
     def reset!
         @cells = [" "," "," "," "," "," "," "," "," "]
+        @moves = @cells
+    end
+
+    def reset_available_moves
+        available_moves.clear
     end
 
     def display
@@ -18,6 +23,23 @@ class Board
         puts "-----------"
         puts " #{@cells[6]} | #{@cells[7]} | #{@cells[8]} "
     end
+
+    # def moves_display
+    #     puts "[#{@moves[0]}]|[#{@moves[1]}]|[#{@moves[2]}]"
+    #     puts "-----------"
+    #     puts "[#{@moves[3]}]|[#{@moves[4]}]|[#{@moves[5]}]"
+    #     puts "-----------"
+    #     puts "[#{@moves[6]}]|[#{@moves[7]}]|[#{@moves[8]}]"
+    # end
+
+    # def available_moves
+    #     board_available_moves = []
+    #     @cells.each.with_index(1) do |value, index|
+    #       board_available_moves << index if value == " "
+    #     end
+    #     # binding.pry
+    #     board_available_moves
+    # end
 
     def position(user_input)
         @cells[user_input.to_i - 1]
@@ -41,7 +63,10 @@ class Board
     end
 
     def update(player_move, player)
+        puts "Turn #{turn_count + 1}: #{player.token}'s Turn"
         @cells[player_move.to_i - 1] = player.token
+        display
+        puts "=============="
     end
 
 end
