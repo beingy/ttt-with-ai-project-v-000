@@ -2,121 +2,86 @@ module Players
 
     class Player::Computer < Player
 
-        AI_WIN_COMBOS = [
-        [2,5,8], #    # side right
-        [0,1,2], #    # side top
-        [0,3,6], #    # side left
-        [6,7,8], #    # side bottom
-        [3,4,5], #    # middle left right
-        [1,4,7], #    # middle top down
-        [0,4,8], #    # middle top left-bottom right corner
-        [2,4,6]] #    # middle top right-bottom left corner
-
         def move(board)
-            board_available_moves = []
-            board.cells.each.with_index(1) do |value, index|
-              board_available_moves << index if value == " "
+            if check_winning_move(board)
+                make_move = make_winning_move(board)
+                puts "Make #{@token} winning move to position #{make_move}."
+                make_move
+
+            else
+                make_move = available_moves(board).sample
+                puts "Make random #{@token} move to position #{make_move}"
+                make_move
+
             end
-            player_move = board_available_moves.sample
-            # if win_rule(board_available_moves, board)
-            #     win_move = win_rule(board_available_moves, board)
-            #     win_move.to_s
-            # else
-                win_rule(board_available_moves, board)
-                puts "Added #{@token} to position #{player_move}."
-                player_move.to_s
-            # end
+            
+            # check_opponent_winning_move
+            # check_potential_fork_moves
+            # check_opponent_fork_moves
+            # play_center_position
+            # play_corner_position
+
+        end # => end of #move method
+
+        def available_moves(board)
+            collect_positions(" ", board)
+        end # => end of #available_moves method
+
+        def collect_positions(token_or_empty, board)
+            positions = board.cells.each_index.select { |index| board.cells[index] == token_or_empty }
+            positions.collect {|n| (n+1).to_s}
+        end # => end of #collect_position method
+
+        def potential_winning_combos(board)
+            Game::WIN_COMBINATIONS.collect { |combo|
+                combo.collect {|cell| cell = board.cells[cell]} }
+        end # => end of #potential_winning_combos method
+
+        def winning_combos_token_count(board)
+            potential_winning_combos(board).collect do |combo| 
+                {
+                x_count: combo.count { |c| c == "X" }, 
+                o_count: combo.count { |c| c == "O" },
+                empty_count: combo.count { |c| c == " " }
+                }
+            end
         end
 
-        def win_rule(board_available_moves, board)
-            token_winning_combo_available = []
-            winning_combo_available = []
-
-            board.cells.each.with_index(1) do |value, index|
-              token_winning_combo_available << index if value == " " || value == @token
+        def x_winning_combo(board)
+            winning_combos_token_count(board).index do |combo| 
+                combo[:x_count] == 2 && combo[:empty_count] == 1 
             end
-
-            AI_WIN_COMBOS.each.with_index do |combo, index|
-                if 
-                token_winning_combo_available.include?(combo[0]+1) && 
-                token_winning_combo_available.include?(combo[1]+1) &&
-                token_winning_combo_available.include?(combo[2]+1)
-                    winning_combo_available << AI_WIN_COMBOS[index]
-                end
-            end
-
-            # AI_WIN_COMBOS.each.with_index do |combo, index|
-            #     if 
-            #     board_available_moves.include?(combo[0]+1) && 
-            #     board_available_moves.include?(combo[1]+1) &&
-            #     board_available_moves.include?(combo[2]+1)
-            #         winning_combo_available << AI_WIN_COMBOS[index]
-            #     end
-            # end
-            # binding.pry
-            case 
-            when winning_combo_available.count == 8
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                # false
-            when winning_combo_available.count == 7
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                # false
-            when winning_combo_available.count == 6
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                # false
-            when winning_combo_available.count == 5
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                puts "#{winning_combo_available}"
-                # false
-            when winning_combo_available.count == 4
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                puts "#{winning_combo_available}"
-                # false
-            when winning_combo_available.count == 3
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                puts "#{winning_combo_available}"
-                # false
-            when winning_combo_available.count == 2
-                puts "Win rule: #{@token} has #{winning_combo_available.count} ways to win."
-                puts "#{winning_combo_available}"
-                # false
-            when winning_combo_available.count == 1
-                puts "Win rule: #{@token} has #{winning_combo_available.count} way to win."
-                puts "#{winning_combo_available}"
-                # false
-            end
-
-            # board_available_moves.each do |move|
-            #     board.cells.each.with_index do |value, index|
-            #     end
-            # end
         end
 
-        def two_in_a_row(winning_combo_available, board)
-            winning_move = []
-            winning_combo_available.each do |combo|
-                if
-                board.cells[combo[0]] == @token &&
-                board.cells[combo[1]] == @token &&
-                board.cells[combo[2]] == " "
-                    winning_move << board.cells[combo[2]]
-                elsif
-                board.cells[combo[0]] == @token &&
-                board.cells[combo[1]] == " " &&
-                board.cells[combo[2]] == @token
-                    winning_move << board.cells[combo[1]]
-                elsif 
-                board.cells[combo[0]] == " " &&
-                board.cells[combo[1]] == @token &&
-                board.cells[combo[2]] == @token
-                    winning_move << board.cells[combo[0]]
-                end
+        def o_winning_combo(board)
+            winning_combos_token_count(board).index do |combo| 
+                combo[:o_count] == 2 && combo[:empty_count] == 1
             end
-            # binding.pry
-            winning_move
+        end         
 
+        def check_winning_move(board)
+            case @token
+            when "X"
+                x_winning_combo(board)
+            when "O"              
+                o_winning_combo(board)
+            end
         end
 
-    end
+        def find_empty_for_the_win(board)
+            Game::WIN_COMBINATIONS[check_winning_move(board)].index { |index| board.cells[index] == " " }
+        end
 
-end
+        def make_winning_move(board)
+            (Game::WIN_COMBINATIONS[check_winning_move(board)][find_empty_for_the_win(board)] + 1).to_s
+        end        
+
+    end # => end of Player::Computer class
+
+end # => Players module
+
+# To-do list:
+# 1. check board for available spots. [done]
+# 3. check board for potential win combinations and make the winning move. [done]
+# 4. check board for potential opponent win combinations and block opponent's potential winning combination.
+# 5. 
