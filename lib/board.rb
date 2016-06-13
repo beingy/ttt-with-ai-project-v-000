@@ -64,7 +64,7 @@ class Board
     end
 
     def update(player_move, player)
-        puts "Turn #{turn_count + 1}: #{player.token}'s Turn"
+        puts "Turn #{turn_count + 1}: End of #{player.token}'s Turn"
         @cells[player_move.to_i - 1] = player.token
         display
         puts "=============="

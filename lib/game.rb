@@ -67,10 +67,26 @@ class Game
         end
     end
 
+    def play_again?
+        print "Play again? [Yes/No]: "
+        again_input = gets.chomp.downcase
+        if again_input == "n" || again_input == "no"
+            puts "=========="
+            "Good bye, Human!\n".each_char do |c|
+                sleep 0.1
+                print c
+            end
+            exit # => exit game
+        end
+    end
+
     def start
 
-        user_input = ""
-        while user_input != "exit" do
+        command_user_input = ""
+
+        # Start TTT CLI while loop
+
+        while command_user_input != "exit" do
             puts "======================="
             "Welcome to Tic Tac Toe!\n".each_char do |c|
               sleep 0.1
@@ -83,12 +99,17 @@ class Game
             puts "[2] 2 Player Game"
             puts "[3] Wargames"
             print "Command: "
-            user_input = gets.chomp
+            command_user_input = gets.chomp.downcase
+
+            # Start TTT case user_input
 
             case
-            when user_input == "0"
+
+            # Start 0 Player Game command
+
+            when command_user_input == "0"
                 puts "=========="
-                puts "[Who should go first and be X? Player 1 or Player 2?]"
+                puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
                 user_input = gets.chomp
 
@@ -105,21 +126,12 @@ class Game
                     elsif game.draw?
                         puts "Draw!"
                     end
-                    print "Play again? [Yes/No]: "
-                    again_input = gets.chomp
-                    if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
-                        "Good Bye, Human!\n".each_char do |c|
-                          sleep 0.1
-                          print c
-                        end
-                        user_input = "exit" 
-                    end
+                    play_again?
 
                 when "2"
                     player_1 = Player::Computer.new("O")
                     player_2 = Player::Computer.new("X")
                     game = Game.new(player_2,player_1)
-                    game.display
                     game.play
                     if game.winner == "X"
                         puts "Player 2 AI won!"
@@ -128,20 +140,17 @@ class Game
                     elsif game.draw?
                         puts "Draw!"
                     end
-                    print "Play again? [Yes/No]: "
-                    again_input = gets.chomp
-                    if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
-                        "Good Bye, Human!\n".each_char do |c|
-                          sleep 0.1
-                          print c
-                        end
-                        user_input = "exit" 
-                    end
+                    play_again?
+
                 end # => case user_input
 
-            when user_input == "1"
+            # End 0 Player Game command
+
+            # Start 1 Player Game command
+
+            when command_user_input == "1"
                 puts "=========="
-                puts "[Who should go first and be X? Player 1 (You) or Player 2 (AI)?]"
+                puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
                 user_input = gets.chomp
                 
@@ -159,9 +168,7 @@ class Game
                     elsif game.draw?
                         puts "Draw!"
                     end
-                    # print "Play again? [Yes/No]: "
-                    # again_input = gets.chomp
-                    # user_input = "exit" if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
+                    play_again?
 
                 when "2"
                     player_1 = Player::Human.new("O")
@@ -173,15 +180,17 @@ class Game
                     elsif game.winner == "O"
                         puts "Player 1, You won!"
                     end
-                    # print "Play again? [Yes/No]: "
-                    # again_input = gets.chomp
-                    # user_input = "exit" if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
+                    play_again?
 
                 end # => case user_input
 
-            when user_input == "2"
+            # End 1 Player Game command
+
+            # Start 2 Player Game command
+
+            when command_user_input == "2"
                 puts "=========="
-                puts "[Who should go first and be X? Player 1 or Player 2?]"
+                puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
                 user_input = gets.chomp
 
@@ -198,9 +207,7 @@ class Game
                     elsif game.draw?
                         puts "Draw!"
                     end
-                    # print "Play again? [Yes/No]: "
-                    # again_input = gets.chomp
-                    # user_input = "exit" if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
+                    play_again?
                 when "2"
                     player_1 = Player::Human.new("O")
                     player_2 = Player::Human.new("X")
@@ -213,22 +220,27 @@ class Game
                     elsif game.draw?
                         puts "Draw!"
                     end
-                    # print "Play again? [Yes/No]: "
-                    # again_input = gets.chomp
-                    # user_input = "exit" if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
+                    play_again?
                 
                 end # => case user_input
 
-            when user_input == "3" || user_input == "wargames" || user_input == "Wargames"
+            # End 2 Player Game command
+
+            # Start Wargames commmand
+
+            when command_user_input == "3" || command_user_input == "wargames"
                 "Wargames commencing...\n".each_char do |c|
                           sleep 0.1
                           print c
                         end
-                puts "[Who should go first and be X? Player 1 AI or Player 2 AI?]"
+                puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
                 user_input = gets.chomp
 
-                case user_input
+                case user_input # start Wargames case user_input
+
+                # Player 1 AI play X
+
                 when "1"
                     player_1_wins = 0
                     player_2_wins = 0
@@ -253,16 +265,11 @@ class Game
                     puts "Player 1 AI won #{player_1_wins} games,"
                     puts "Player 2 AI won #{player_2_wins} games,"
                     puts "and #{draws} draws."
+                    play_again?
 
-                    print "Play again? [Yes/No]: "
-                    again_input = gets.chomp
-                    if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
-                        "Good Bye, Human!\n".each_char do |c|
-                          sleep 0.1
-                          print c
-                        end
-                        user_input = "exit" 
-                    end
+                # end Player 1 AI play X
+
+                # Player 2 AI play X
 
                 when "2"
                     player_1_wins = 0
@@ -290,29 +297,34 @@ class Game
                     puts "Player 1 AI won #{player_1_wins} games,"
                     puts "Player 2 AI won #{player_2_wins} games,"
                     puts "and #{draws} draws."
+                    play_again?
 
-                    print "Play again? [Yes/No]: "
-                    again_input = gets.chomp
-                    if again_input == "N" || again_input == "n" || again_input == "No" || again_input == "no"
-                        "Good Bye, Human!\n".each_char do |c|
-                          sleep 0.1
-                          print c
-                        end
-                        user_input = "exit" 
-                    end
-                end # => case user_input
+                # End Player 2 AI play X
+
+                end # => end Wargames case user_input
+
+            # End Wargames command
             
-            when user_input == "bye" || user_input == "quit"
+            # Exit commmand
+
+            when command_user_input == "bye" || command_user_input == "quit"
                 puts "=========="
-                "Good Bye, Human!\n".each_char do |c|
-                  sleep 0.1
-                  print c
-                end
-                user_input = "exit"
+                "Good bye, Human!\n".each_char do |c|
+                    sleep 0.1
+                    print c
+                end        
+                command_user_input = "exit" # => exit game
 
-            end # => case main
-        end
+            # End Exit command
 
-    end
+            else
+                puts "=========="
+                puts "Your command is invalid.  Please try again."
 
-end
+            end # => end TTT case user_input
+
+        end # => end TTT CLI while loop
+
+    end # => end TTT #start method
+
+end # => end Game Class
