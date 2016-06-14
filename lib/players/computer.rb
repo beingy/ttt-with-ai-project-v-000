@@ -3,9 +3,26 @@ module Players
     class Player::Computer < Player
 
         def move(board)
+
             if check_winning_move(board)
                 make_move = make_winning_move(board)
                 puts "Make #{@token} winning move to position #{make_move}."
+                make_move
+
+            elsif check_opponent_winning_move(board)
+                make_move = make_blocking_move(board)
+                puts "Block #{opponent_token(board)}'s potential winning move at position #{make_move}."
+                make_move
+
+            elsif available_moves(board).count == 9 # Turn 1 as X token
+                make_move = "5"
+                puts "#{@token} makes middle move at position #{make_move}"
+                make_move
+
+            elsif available_moves(board).count == 8 # Turn 1 as O token
+                make_move = ["1","3","7","9"].sample if available_moves(board).include?(5)
+                make_move = "5" if !available_moves(board).include?(5)
+                puts "#{@token} makes move at position #{make_move}"
                 make_move
 
             else
@@ -68,13 +85,40 @@ module Players
             end
         end
 
+        def check_opponent_winning_move(board)
+            case @token
+            when "X"
+                o_winning_combo(board)
+            when "O"              
+                x_winning_combo(board)
+            end
+        end
+
+
         def find_empty_for_the_win(board)
             Game::WIN_COMBINATIONS[check_winning_move(board)].index { |index| board.cells[index] == " " }
         end
 
+        def find_empty_to_block_win(board)
+           Game::WIN_COMBINATIONS[check_opponent_winning_move(board)].index { |index| board.cells[index] == " " } 
+        end
+
         def make_winning_move(board)
             (Game::WIN_COMBINATIONS[check_winning_move(board)][find_empty_for_the_win(board)] + 1).to_s
-        end        
+        end
+
+        def make_blocking_move(board)
+            (Game::WIN_COMBINATIONS[check_opponent_winning_move(board)][find_empty_to_block_win(board)] + 1).to_s
+        end
+
+        def opponent_token(board)  
+            case @token
+            when "X"
+                "O"
+            when "O"             
+                "X"
+            end 
+        end
 
     end # => end of Player::Computer class
 
@@ -84,4 +128,8 @@ end # => Players module
 # 1. check board for available spots. [done]
 # 3. check board for potential win combinations and make the winning move. [done]
 # 4. check board for potential opponent win combinations and block opponent's potential winning combination.
-# 5. 
+# 5. create fork win
+# 5a. Turn 1: 1st move: middle "5"
+# 5a1.Turn 2: If opponent plays middle
+# 5a2.Turn 3: Play 
+# 6. block opponent fork win
