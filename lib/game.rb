@@ -127,7 +127,10 @@ class Game
             command_user_input = gets.chomp.downcase
 
             case # Start TTT case user_input
-            when command_user_input == "0" # Start 0 Player Game command
+
+# 0 Player Game
+
+            when command_user_input == "0"
                 puts "========================================="
                 puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
@@ -165,7 +168,9 @@ class Game
                 end # => case user_input
                 # End 0 Player Game command
 
-            when command_user_input == "1" # Start 1 Player Game command
+# 1 Player Game
+
+            when command_user_input == "1" 
                 puts "========================================="
                 puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
@@ -201,7 +206,9 @@ class Game
                 end # => case user_input 
                 # End 1 Player Game command
 
-            when command_user_input == "2" # Start 2 Player Game command
+# 2 Player Game
+
+            when command_user_input == "2" 
                 puts "========================================="
                 puts "Who should go first and be X, Player 1 or Player 2?"
                 print "[1] or [2]: "
@@ -239,7 +246,7 @@ class Game
                 end # => case user_input
                 # End 2 Player Game command
 
-# Start Wargames commmand
+# Wargames
 
             when command_user_input == "3" || command_user_input == "wargames" 
                 puts "========================================="

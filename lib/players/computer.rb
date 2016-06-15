@@ -14,12 +14,17 @@ module Players
                 puts "  Blocked #{opponent_token(board)}'s potential winning move at position #{make_move}."  if display_mode
                 make_move
 
-            elsif available_moves(board).count == 9 # Turn 1 as X token
-                make_move = "5"
-                puts "  #{@token} makes middle move at position #{make_move}" if display_mode
+            elsif check_corners(board)
+                make_move = opposite_corner(board)
+                puts "  #{opponent_token(board)} in 1 corner, #{@token} took opposite corner to position #{make_move}." if display_mode
                 make_move
 
-            elsif available_moves(board).count == 8 # Turn 1 as O token
+            elsif check_potential_opponent_fork(board)
+                make_move = take_a_corner_to_draw(board)
+                puts "  #{opponent_token(board)} trying to fork, #{@token} force draw by taking a corner at position #{make_move}." if display_mode
+                make_move
+
+            elsif available_moves(board).count == 8 # Turn 2 as O token
                 if board.cells[4] == opponent_token(board)
                     make_move = ["1","3","7","9"].sample
                     puts "  #{@token} added to position #{make_move}"  if display_mode
@@ -31,6 +36,11 @@ module Players
                     make_move
 
                 end
+            
+            elsif available_moves(board).count == 9 # Turn 1 as X token
+                make_move = "5"
+                puts "  #{@token} makes middle move at position #{make_move}" if display_mode
+                make_move
 
             else
                 make_move = available_moves(board).sample
@@ -54,7 +64,7 @@ module Players
         def collect_positions(token_or_empty, board)
             positions = board.cells.each_index.select { |index| board.cells[index] == token_or_empty }
             positions.collect {|n| (n+1).to_s}
-        end # => end of #collect_position method
+        end # => end of #collect_positions method
 
         def potential_winning_combos(board)
             Game::WIN_COMBINATIONS.collect { |combo|
@@ -127,6 +137,30 @@ module Players
             end 
         end
 
+        def opposite_corner(board)
+            corners = ["1","3","7","9"]
+            available_corners = available_moves(board).select {|move| corners.include?(move)}
+            available_corners[1]
+        end
+
+        def check_corners(board)
+            corners = ["1","3","7","9"]
+            available_corners = available_moves(board).select {|move| corners.include?(move)}
+            available_corners.count == 3 ? true : false
+        end
+
+        def check_potential_opponent_fork(board)
+            corners = ["1","3","7","9"]
+            available_corners = available_moves(board).select {|move| corners.include?(move)}
+            available_corners.count == 2 ? true : false
+        end
+
+        def take_a_corner_to_draw(board)
+            corners = ["1","3","7","9"]
+            available_corners = available_moves(board).select {|move| corners.include?(move)}
+            available_corners.sample
+        end
+
     end # => end of Player::Computer class
 
 end # => Players module
@@ -136,7 +170,9 @@ end # => Players module
 # 3. check board for potential win combinations and make the winning move. [done]
 # 4. check board for potential opponent win combinations and block opponent's potential winning combination.
 # 5. create fork win
-# 5a. Turn 1: 1st move: middle "5"
-# 5a1.Turn 2: If opponent plays middle
-# 5a2.Turn 3: Play 
+# 5a. Turn 1: X plays middle "5"
+# 5a1.Turn 2: O plays corner ["1","3","7","9"].sample, example "1"
+#      board.cells = ["O"," "," "," ","X"," "," "," "," "]
+# 5a2.Turn 3: X plays opposite corner of O, "9" 
+# always take a corner if no winning move
 # 6. block opponent fork win
