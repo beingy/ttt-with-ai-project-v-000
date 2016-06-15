@@ -13,11 +13,11 @@ class Board
     end
 
     def display
-        puts " #{@cells[0]} | #{@cells[1]} | #{@cells[2]} "
-        puts "-----------"
-        puts " #{@cells[3]} | #{@cells[4]} | #{@cells[5]} "
-        puts "-----------"
-        puts " #{@cells[6]} | #{@cells[7]} | #{@cells[8]} "
+        puts "          " + " #{@cells[0]} | #{@cells[1]} | #{@cells[2]} "
+        puts "          " + "-----------"
+        puts "          " + " #{@cells[3]} | #{@cells[4]} | #{@cells[5]} "
+        puts "          " + "-----------"
+        puts "          " + " #{@cells[6]} | #{@cells[7]} | #{@cells[8]} "
     end
 
     def position(player_move)
@@ -41,8 +41,8 @@ class Board
         value_moves.detect {|move| move == player_move } unless taken?(player_move)
     end
 
-    def update(player_move, player)
-        puts "Turn #{turn_count + 1}: End of #{player.token}'s Turn"
+    def update(player_move, player, display_mode = true )
+        puts "  Turn #{turn_count + 1}: End of #{player.token}'s Turn" if display_mode
         @cells[player_move.to_i - 1] = player.token
     end
 

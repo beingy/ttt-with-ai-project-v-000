@@ -2,32 +2,39 @@ module Players
 
     class Player::Computer < Player
 
-        def move(board)
+        def move(board, display_mode = true)
 
             if check_winning_move(board)
                 make_move = make_winning_move(board)
-                puts "Make #{@token} winning move to position #{make_move}."
+                puts "  #{@token} made winning move to position #{make_move}." if display_mode
                 make_move
 
             elsif check_opponent_winning_move(board)
                 make_move = make_blocking_move(board)
-                puts "Block #{opponent_token(board)}'s potential winning move at position #{make_move}."
+                puts "  Blocked #{opponent_token(board)}'s potential winning move at position #{make_move}."  if display_mode
                 make_move
 
             elsif available_moves(board).count == 9 # Turn 1 as X token
                 make_move = "5"
-                puts "#{@token} makes middle move at position #{make_move}"
+                puts "  #{@token} makes middle move at position #{make_move}" if display_mode
                 make_move
 
             elsif available_moves(board).count == 8 # Turn 1 as O token
-                make_move = ["1","3","7","9"].sample if available_moves(board).include?(5)
-                make_move = "5" if !available_moves(board).include?(5)
-                puts "#{@token} makes move at position #{make_move}"
-                make_move
+                if board.cells[4] == opponent_token(board)
+                    make_move = ["1","3","7","9"].sample
+                    puts "  #{@token} added to position #{make_move}"  if display_mode
+                    make_move
+
+                elsif available_moves(board).include?(5)
+                    make_move = "5"
+                    puts "  #{@token} added to position #{make_move}" if display_mode
+                    make_move
+
+                end
 
             else
                 make_move = available_moves(board).sample
-                puts "Make random #{@token} move to position #{make_move}"
+                puts "  #{@token} made random move to position #{make_move}" if display_mode
                 make_move
 
             end
